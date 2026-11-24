@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ tabs[section] }} · 机坪加油回执台</title><link rel="stylesheet" href="/static/ramp.css"><link rel="stylesheet" href="/static/inventory.css"><script src="/static/dispatch.js" type="module"></script></head>
+<body class="terminal">
+<nav class="operations" aria-label="油务工序"><a class="unit" href="/"><span aria-hidden="true">▥</span> 机坪油务</a>
+{% for key,label in tabs.items() %}<a href="{{ url_for('ramp.view',tab=key,sample=sample) }}" {% if key==section %}aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}</nav>
+<main><header class="apphead"><div><p>地服油务 · 交班复核</p><h1>机坪加油回执台</h1></div>
+<form method="get" id="choose-bundle"><label for="bundle">交班来源</label><select name="sample" id="bundle"><option value="dirty" {{ 'selected' if sample=='dirty' }}>夜班三联单</option><option value="clean" {{ 'selected' if sample=='clean' }}>正常交班对照</option></select><button>调阅</button></form></header>
+<div class="kpis"><div><span>计量入账</span><b>{{ data.mass.mass_g|kg }} <small>kg</small></b></div><div><span>回执异常票</span><b>{{ data.balance.receipts|rejectattr('state','equalto','MATCH')|list|length }} <small>笔</small></b></div><div><span>缺库存锚点</span><b>{{ data.balance.held_trucks }} <small>辆</small></b></div></div>
+<div class="work-title"><h2>{{ tabs[section] }}</h2><span>规则 {{ rev }}</span></div>
+{% include section ~ '.html' %}
+<footer><span>质量单位 kg · 仪表单位 L</span><span id="dispatch-message" role="status">交班联已载入</span></footer>
+</main></body></html>

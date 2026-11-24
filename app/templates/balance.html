@@ -1,0 +1,15 @@
+{% set report=data.balance %}
+{% set totals=report.totals %}
+<div class="sticky-balance"><span>已闭合库存车辆 <b>{{ report.complete_trucks }}</b></span><span>库存差额 <b>{{ totals.difference_g|kg }} kg</b></span><span>逐票签收净差 <b>{{ report.receipt_delta_g|kg }} kg</b></span></div>
+<div class="double-book"><section class="panel stock-book"><h3>罐车收发双账</h3>
+<div class="gauges">
+{% for truck in report.stocks %}<article class="gauge-card"><h4>{{ truck.truck }}</h4><div class="gauge" aria-hidden="true">
+{% if truck.complete %}{% set total=truck.opening_g+truck.inbound_g %}{% if total>0 %}<span class="gauge-fill" style="--fill:{{ [100,100*truck.closing_g/total]|min }}%"></span>{% endif %}{% endif %}
+</div><dl><dt>期初</dt><dd>{{ truck.opening_g|kg }}</dd><dt>入车</dt><dd>{{ truck.inbound_g|kg }}</dd><dt>发放</dt><dd>{{ truck.issued_g|kg }}</dd><dt>期末</dt><dd>{{ truck.closing_g|kg }}</dd><dt>差额</dt><dd>{{ truck.difference_g|kg }}</dd></dl>
+<small>{% if truck.complete %}库存行 {{ truck.source_lines|join('、') }}{% else %}{{ truck.fault.note }}{% if truck.isolated_lines %} · 行 {{ truck.isolated_lines|join('、') }}{% endif %}{% endif %}</small></article>{% endfor %}
+</div></section>
+<section class="panel sign-book"><h3>计量票与签收联</h3><div class="scroll"><table><thead><tr><th>加注票</th><th>计量 kg</th><th>签收 kg</th><th>差值 kg</th><th>复核记录</th></tr></thead><tbody>
+{% for row in report.receipts %}<tr class="{{ 'variance' if row.state!='MATCH' else '' }}"><td>{{ row.ticket }}</td><td>{{ row.meter_g|kg }}</td><td>{{ row.signed_g|kg }}</td><td>{{ row.variance_g|kg }}</td><td><details><summary>{{ row.reason }}</summary><p>计量行 {{ row.ticket_line }} / 签收行 {{ row.receipt_lines|join('、') or '—' }}</p><p>{{ row.document or '—' }} · 允许 ±{{ row.allowance_g|kg }} kg</p></details></td></tr>{% endfor %}
+</tbody></table></div>
+{% if report.unmatched_receipts %}<div class="orphan"><strong>孤立签收</strong>{% for row in report.unmatched_receipts %}<p>{{ row.ticket }} · {{ row.signed_g|kg }} kg · 签收行 {{ row.line }}</p>{% endfor %}</div>{% endif %}
+</section></div>

@@ -1,0 +1,10 @@
+{
+  "ranges": [
+    {"id":"F12-1","truck":"FT-12","since":"2026-10-01T00:00:00Z","until":"2026-11-23T00:00:00Z","revision":1,"range_l":"1000","wrap_band_l":"100","max_ticket_l":"300","ppm":5000,"floor_g":150},
+    {"id":"F12-2","truck":"FT-12","since":"2026-11-22T02:00:00Z","until":"2027-01-01T00:00:00Z","revision":2,"range_l":"1000","wrap_band_l":"50","max_ticket_l":"600","ppm":2500,"floor_g":100},
+    {"id":"F18-A","truck":"FT-18","since":"2026-11-22T00:00:00Z","until":"2026-11-23T00:00:00Z","revision":2,"range_l":"500","wrap_band_l":"30","max_ticket_l":"220","ppm":3000,"floor_g":100},
+    {"id":"F18-B","truck":"FT-18","since":"2026-11-22T02:00:00Z","until":"2026-11-22T03:00:00Z","revision":2,"range_l":"600","wrap_band_l":"30","max_ticket_l":"220","ppm":3000,"floor_g":100},
+    {"id":"F23-1","truck":"FT-23","since":"2026-11-01T00:00:00Z","until":"2027-01-01T00:00:00Z","revision":1,"range_l":"800","wrap_band_l":"80","max_ticket_l":"350","ppm":2000,"floor_g":80}
+  ],
+  "fuels":{"JET-A1":{"rho_kg_m3":[775,840]}}
+}

@@ -1,0 +1,4 @@
+<div class="double-book"><section class="panel"><h3>原件接收账</h3><div class="scroll"><table><thead><tr><th>原件</th><th>输入</th><th>采信</th><th>隔离</th><th>重复</th><th>分段</th></tr></thead><tbody>
+{% set labels={'tickets':'仪表票','receipts':'回执单','stock':'库存表'} %}
+{% for name, sheet in data.intake.sheets.items() %}<tr><td>{{ labels[name] }}</td><td>{{ sheet.input }}</td><td>{{ sheet.accepted }}</td><td>{{ sheet.isolated }}</td><td>{{ sheet.duplicate }}</td><td>{{ sheet.segments }}</td></tr>{% endfor %}
+</tbody></table></div></section><section class="panel"><h3>隔离原件</h3>{% for name, sheet in data.intake.sheets.items() %}{% for row in sheet.quarantine %}<details><summary>{{ labels[name] }} · 行 {{ row.line }} · {{ row.note }}</summary><p>{{ row.code }} · {{ row.raw|join(' / ') }}</p></details>{% endfor %}{% endfor %}</section></div>

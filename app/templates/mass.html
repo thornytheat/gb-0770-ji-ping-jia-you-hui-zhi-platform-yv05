@@ -1,0 +1,3 @@
+<div class="double-book"><section class="panel"><h3>标准质量明细</h3><div class="scroll"><table><thead><tr><th>票号</th><th>原报密度</th><th>15°C 体积 L</th><th>质量 kg</th><th>容差 kg</th></tr></thead><tbody>
+{% for row in data.mass.rows %}<tr><td>{{ row.ticket }}</td><td>{{ row.ticket_record.rho }} {{ row.ticket_record.rho_unit }}</td><td>{{ row.standard.liter_at_15_c if row.standard else '—' }}</td><td>{{ row.standard.mass_g|kg if row.standard else '—' }}</td><td>{{ row.standard.allowance_g|kg if row.standard else '—' }}</td></tr>{% endfor %}
+</tbody></table></div></section><section class="panel"><h3>换算待证</h3>{% for row in data.mass.rows if row.fault %}<p>{{ row.ticket }} · 行 {{ row.line }}<br><small>{{ row.fault.note }}</small></p>{% endfor %}</section></div>

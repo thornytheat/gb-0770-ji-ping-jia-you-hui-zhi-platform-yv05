@@ -1,0 +1,12 @@
+name: ground-turnaround
+services:
+  app:
+    build: .
+    ports:
+      - '18469:18469'
+    environment:
+      FUEL_BOOK: var/fuel.sqlite
+    volumes:
+      - dispatch_book:/ramp/var
+volumes:
+  dispatch_book:

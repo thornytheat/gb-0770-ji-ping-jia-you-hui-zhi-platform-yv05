@@ -1,0 +1,3 @@
+<div class="double-book"><section class="panel"><h3>机坪加注证据单</h3>{% if runs %}<form id="signature"><label for="batch">交班批次</label><select id="batch">{% for run in runs %}<option value="{{ run.batch }}" {{ 'selected' if run.batch==current }}>{{ run.batch[:15] }} · {{ run.totals.difference_g|kg }} kg</option>{% endfor %}</select><button>签发交班证据</button></form>
+<p><output id="checksum"></output></p><a id="export-slip" hidden>下载签发单</a>{% else %}<p>请先归档交班账。</p>{% endif %}</section>
+<section class="panel"><h3>随件联单</h3><ul><li>量程选版与测量原件</li><li>签收比对与罐车收发</li><li>异常和未闭合库存</li></ul></section></div>
