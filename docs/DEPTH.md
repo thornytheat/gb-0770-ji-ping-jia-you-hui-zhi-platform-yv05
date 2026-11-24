@@ -13,6 +13,7 @@
 | M5 库存和签单对账 | 核对罐车与逐票签收差额 | `GET/POST /api/balance` | `app/settlement/inventory.py` `app/settlement/receipts.py` `app/settlement/report.py` | `tests/test_settlement.py` |
 | M6 批次留档复跑 | 保存清单与各阶段快照 | `POST /api/shifts` | `app/ledger/replay.py` `app/ledger/sqlite_book.py` | `tests/test_replay.py` |
 | M7 加注证据签发 | 固定签发证据并复验摘要 | `POST /api/shifts/{batch}/sign` | `app/dispatch/signatures.py` `app/dispatch/document.py` | `tests/test_dispatch.py` |
+| M8 退油对账 | 过磅退油入当班库存并核冲销 | `GET/POST /api/returns` `POST /api/returns/{id}/review` `GET/POST /api/returns/{id}/voucher` | `app/returns/ledger.py` `app/returns/evidence.py` `app/returns/report.py` | `tests/test_returns.py` |
 
 ## 陷阱登记
 

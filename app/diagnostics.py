@@ -9,6 +9,9 @@ REASONS = {
     'TEMPERATURE':'油温超出模型范围', 'FUEL':'未配置该油种', 'NO_RECEIPT':'缺少签收回执',
     'SIGN_TRUCK':'计量票与回执车号不一致', 'NO_METER':'签收缺少可计发放票', 'SIGN_DIFF':'签收差超过允许误差',
     'STOCK_ANCHORS':'缺少唯一的期初或期末库存', 'NO_BATCH':'没有此交班归档', 'NOT_SIGNED':'证据单尚未签发',
+    'NO_TICKET':'原加油票未找到', 'OVER_REMAINING':'超出原票剩余可退量',
+    'RETURN_FIELDS':'退油单字段缺失或无效', 'RETURN_MISMATCH':'同号退油单与已入账内容不一致',
+    'NO_RETURN':'没有此退油单', 'NO_VOUCHER':'退油凭证尚未签发',
 }
 
 

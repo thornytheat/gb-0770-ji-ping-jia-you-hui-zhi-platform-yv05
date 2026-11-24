@@ -5,10 +5,11 @@ from app.bundles import sample_set
 from app.configuration import RULESET
 from app.diagnostics import RampError
 from app.ledger.replay import list_shifts
+from app.returns.report import returns_report
 from app.shift import compute
 
-SECTIONS = {'balance':'库存和签单对账','intake':'仪表与回执采信','versions':'罐车量程配置选版','readings':'两端读数重建',
-            'mass':'密度换算与误差带','shifts':'批次留档复跑','sign':'加注证据签发'}
+SECTIONS = {'balance':'库存和签单对账','returns':'退油对账','intake':'仪表与回执采信','versions':'罐车量程配置选版',
+            'readings':'两端读数重建','mass':'密度换算与误差带','shifts':'批次留档复跑','sign':'加注证据签发'}
 display = Blueprint('ramp',__name__)
 
 
@@ -25,5 +26,6 @@ def view(tab='balance'):
     name = request.args.get('sample','dirty')
     data = compute(sample_set(name),'balance')
     runs = list_shifts(current_app.book) if tab in ('shifts','sign') else []
+    returns = returns_report(current_app.book,sample_set(name)) if tab=='returns' else None
     return render_template('base.html',section=tab,tabs=SECTIONS,sample=name,data=data,rev=RULESET,
-                           runs=runs,current=request.args.get('batch',''))
+                           runs=runs,returns=returns,current=request.args.get('batch',''))

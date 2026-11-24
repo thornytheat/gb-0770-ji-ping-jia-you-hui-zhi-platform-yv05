@@ -42,3 +42,32 @@ bind('#signature', async () => {
   exportLink.hidden = false;
   status.textContent = `证据已签发 · 待复核 ${result.open_items} 票`;
 });
+
+bind('#returns-form', async form => {
+  const lines = document.getElementById('return-lines').value.split('\n').map(line => line.trim()).filter(Boolean);
+  if (!lines.length) throw new Error('请填写退油单');
+  const returns = lines.map(line => {
+    const cells = line.split(',').map(cell => cell.trim());
+    if (cells.length !== 5 || cells.some(cell => !cell)) throw new Error('退油单格式：退油单号,原票号,接收罐车,磅单号,过磅 kg');
+    const [return_id,ticket,truck,weighbill,kg] = cells;
+    return {return_id,ticket,truck,weighbill,kg};
+  });
+  await post('/api/returns',{sample:form.dataset.sample,returns});
+  location.reload();
+});
+
+document.querySelectorAll('[data-return-action]').forEach(button => {
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    const id = button.dataset.returnId, action = button.dataset.returnAction;
+    try {
+      const result = await post(`/api/returns/${encodeURIComponent(id)}/${action}`,{sample:button.dataset.sample || 'dirty'});
+      if (action === 'voucher') {
+        status.textContent = `凭证 ${result.checksum.slice(0,16)}… · ${result.voucher.writeoff.status === 'CONFIRMED' ? '已冲销' : '冲销待核'}`;
+      } else {
+        location.reload();
+      }
+    } catch (error) { status.textContent = error.message; }
+    finally { button.disabled = false; }
+  });
+});

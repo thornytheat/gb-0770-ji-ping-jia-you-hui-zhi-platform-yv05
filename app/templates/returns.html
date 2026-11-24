@@ -1,0 +1,18 @@
+{% set report=returns %}
+{% set totals=report.totals %}
+<div class="sticky-balance"><span>退油单 <b>{{ totals.orders }}</b> 张</span><span>过磅合计 <b>{{ totals.returned_g|kg }} kg</b></span><span>已冲销 <b>{{ totals.confirmed_g|kg }} kg</b></span><span>冲销待核 <b>{{ totals.pending_g|kg }} kg · {{ totals.pending }} 张</b></span></div>
+<div class="double-book"><section class="panel"><h3>退油单过磅登记</h3>
+<form id="returns-form" data-sample="{{ sample }}"><p>每行一张退油单：退油单号,原票号,接收罐车,磅单号,过磅 kg</p>
+<textarea id="return-lines" rows="3" placeholder="RT-01,T01,FT-12,WB-9001,12.5"></textarea>
+<button>过磅入账并核冲销</button></form>
+<p><small>已过磅退油即时进接收罐车当班库存，即使原加油票属于上班。原票或签收未齐、或超出原票剩余可退量时，整单冲销待核，不扣货款。</small></p></section>
+<section class="panel"><h3>接收罐车当班库存</h3><div class="scroll"><table><thead><tr><th>罐车</th><th>退油入车 kg</th><th>账面差额 kg</th><th>实存差额 kg</th></tr></thead><tbody>
+{% for truck in report.stocks %}<tr class="{{ 'variance' if truck.returned_g else '' }}"><td>{{ truck.truck }}</td><td>{{ truck.returned_g|kg }}</td><td>{{ truck.difference_g|kg }}</td><td>{{ truck.physical_difference_g|kg }}</td></tr>{% endfor %}
+</tbody></table></div><p><small>退油入车计入当班库存：实存差额 = 期初 + 入车 + 退油 − 发放 − 期末。</small></p></section></div>
+<section class="panel"><h3>退油对账明细</h3><div class="scroll"><table><thead><tr><th>退油单</th><th>原票</th><th>接收车</th><th>磅单</th><th>过磅 kg</th><th>库存</th><th>冲销</th><th>实收 kg</th><th>剩余可退 kg</th><th>凭证</th></tr></thead><tbody>
+{% for row in report.returns %}<tr class="{{ 'variance' if row.writeoff!='CONFIRMED' else '' }}"><td>{{ row.return_id }}</td><td>{{ row.ticket }}</td><td>{{ row.truck }}</td><td>{{ row.weighbill }}</td><td>{{ row.mass_g|kg }}</td><td>已入当班</td>
+<td>{% if row.writeoff=='CONFIRMED' %}已冲销 {{ row.confirmed_g|kg }} kg{% else %}待核 · {{ row.reason.note }} <button type="button" data-return-id="{{ row.return_id }}" data-return-action="review" data-sample="{{ sample }}">复核</button>{% endif %}</td>
+<td>{{ row.evidence.signed_g|kg }}</td><td>{{ row.evidence.remaining_g|kg }}</td>
+<td><button type="button" data-return-id="{{ row.return_id }}" data-return-action="voucher" data-sample="{{ sample }}">签发凭证</button>{% if row.voucher_checksum %}<br><small>已签发 {{ row.voucher_checksum[:12] }}…</small>{% endif %}</td></tr>
+{% else %}<tr><td colspan="10">当班尚无退油单。</td></tr>{% endfor %}
+</tbody></table></div></section>
